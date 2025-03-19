@@ -84,9 +84,9 @@ This project typically includes:
 
 ```
 terraform-digitalocean/
-│── provider.tf          # Main Terraform configuration file
-│── www-1.tf     # Variables used in Terraform
-|── README.md        # Documentation
+│── provider.tf   # Main Terraform configuration file
+│── www-1.tf      # Variables used in Terraform
+|── README.md     # Documentation
 ```
 
 ## Best Practices

@@ -18,7 +18,8 @@ Before using this project, ensure you have the following:
 ### 1. Clone the Repository
 
 ```sh
-git clone https://github.com/your-repo/terraform-digitalocean.git
+git clone https://github.com/Maxourius/terraform-digitalocean.git
+mkdir terraform-digitalocean
 cd terraform-digitalocean
 ```
 
@@ -27,10 +28,10 @@ cd terraform-digitalocean
 Export your DigitalOcean API token as an environment variable:
 
 ```sh
-export DIGITALOCEAN_TOKEN="your_api_token_here"
+export DO_PAT="your_personal_access_token"
 ```
 
-Alternatively, you can define it in a Terraform variables file.
+This will make using it in subsequent commands easier and keep it separate from your code.
 
 ### 3. Initialize Terraform
 
@@ -45,15 +46,20 @@ terraform init
 Check what changes Terraform will make before applying them:
 
 ```sh
-terraform plan
+    terraform plan \
+      -var "do_token=${DO_PAT}" \
+      -var "pvt_key=$HOME/.ssh/id_rsa" 
 ```
+Warning: The terraform plan command supports an -out parameter to save the plan. However, the plan will store API keys, and Terraform does not encrypt this data. When using this option, you should explore encrypting this file if you plan to send it to others or leave it at rest for an extended period of time.
 
 ### 5. Apply the Configuration
 
 Deploy the infrastructure to DigitalOcean:
 
 ```sh
-terraform apply -auto-approve
+    terraform apply \
+      -var "do_token=${DO_PAT}" \
+      -var "pvt_key=$HOME/.ssh/id_rsa"
 ```
 
 ### 6. Destroy the Infrastructure (if needed)
@@ -62,38 +68,6 @@ To tear down the infrastructure:
 
 ```sh
 terraform destroy -auto-approve
-```
-
-## GitHub Integration
-
-### Storing Terraform Configurations in GitHub
-
-- Commit your Terraform files to a GitHub repository for version control.
-- Use `.gitignore` to exclude sensitive files like `terraform.tfstate`.
-- Create a GitHub Actions workflow to automate Terraform deployments.
-
-### Example GitHub Actions Workflow
-
-```yaml
-name: Terraform Deployment
-on:
-  push:
-    branches:
-      - main
-jobs:
-  terraform:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-      - name: Initialize Terraform
-        run: terraform init
-      - name: Plan Terraform Changes
-        run: terraform plan
-      - name: Apply Terraform Changes
-        run: terraform apply -auto-approve
 ```
 
 ## Terraform Configuration
@@ -110,13 +84,9 @@ This project typically includes:
 
 ```
 terraform-digitalocean/
-│── main.tf          # Main Terraform configuration file
-│── variables.tf     # Variables used in Terraform
-│── outputs.tf       # Output values
-│── provider.tf      # Provider configuration
-│── terraform.tfvars # User-specific variable values
-│── .github/workflows/terraform.yml # GitHub Actions workflow
-└── README.md        # Documentation
+│── provider.tf          # Main Terraform configuration file
+│── www-1.tf     # Variables used in Terraform
+|── README.md        # Documentation
 ```
 
 ## Best Practices
@@ -140,12 +110,3 @@ If you encounter issues:
 - [Terraform DigitalOcean Provider](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs)
 - [DigitalOcean API Documentation](https://docs.digitalocean.com/reference/api/)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Author
-
-[Your Name](https://github.com/your-github-profile)
-
